@@ -47,7 +47,14 @@ variables in the gitignored `.envrc.private`:
 | Cloudflare API token (`bigconfig.online` zone) | `COLORS_PAR_CLOUDFLARE_API_TOKEN` |
 | R2 state backend | `COLORS_PAR_R2_ACCESS_KEY_ID`, `COLORS_PAR_R2_SECRET_ACCESS_KEY` |
 | R2 backups (`posthog-backup` bucket) | `COLORS_PAR_POSTHOG_BACKUP_R2_ACCESS_KEY_ID`, `COLORS_PAR_POSTHOG_BACKUP_R2_SECRET_ACCESS_KEY` |
+| Django signing key | `COLORS_PAR_POSTHOG_SECRET_KEY` |
+| Postgres password | `COLORS_PAR_POSTHOG_POSTGRES_PASSWORD` |
+| OIDC RSA private key (PEM, multi-line) | `COLORS_PAR_POSTHOG_OIDC_RSA_PRIVATE_KEY` |
+| Encryption salt keys (32 hex chars) | `COLORS_PAR_POSTHOG_ENCRYPTION_SALT_KEYS` |
 | PostHog owner password | `COLORS_PAR_POSTHOG_ADMIN_PASSWORD` |
+
+None of the application secrets is optional; the package's configuration
+reference explains what each one is for.
 
 ## SSH access
 

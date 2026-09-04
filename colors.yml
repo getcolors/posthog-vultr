@@ -10,7 +10,13 @@
 #                   COLORS_PAR_R2_SECRET_ACCESS_KEY
 #   backups in R2   COLORS_PAR_POSTHOG_BACKUP_R2_ACCESS_KEY_ID
 #                   COLORS_PAR_POSTHOG_BACKUP_R2_SECRET_ACCESS_KEY
-#   application     COLORS_PAR_POSTHOG_ADMIN_PASSWORD
+#   application     COLORS_PAR_POSTHOG_SECRET_KEY          (Django signing key)
+#                   COLORS_PAR_POSTHOG_POSTGRES_PASSWORD
+#                   COLORS_PAR_POSTHOG_OIDC_RSA_PRIVATE_KEY (PEM, multi-line)
+#                   COLORS_PAR_POSTHOG_ENCRYPTION_SALT_KEYS (32 hex chars)
+#                   COLORS_PAR_POSTHOG_ADMIN_PASSWORD
+#                   None is optional; see the package's configuration
+#                   reference for what each one is for.
 #
 # This is the posthog package's second-provider pilot under the workspace
 # Compute Provider Standard: the same package that runs posthog-digitalocean,
