@@ -1,0 +1,100 @@
+# Desired state for posthog-vultr. Non-secret values only.
+# Credentials belong in the gitignored .envrc.private as COLORS_PAR_* variables.
+# Never export COLORS_PAR_PROFILE: it selects this deployment's remote state.
+#
+# Required credentials:
+#   Vultr           COLORS_PAR_VULTR_API_KEY
+#   Cloudflare      COLORS_PAR_CLOUDFLARE_API_TOKEN
+#                   (edit rights on the bigconfig.online zone)
+#   state in R2     COLORS_PAR_R2_ACCESS_KEY_ID
+#                   COLORS_PAR_R2_SECRET_ACCESS_KEY
+#   backups in R2   COLORS_PAR_POSTHOG_BACKUP_R2_ACCESS_KEY_ID
+#                   COLORS_PAR_POSTHOG_BACKUP_R2_SECRET_ACCESS_KEY
+#   application     COLORS_PAR_POSTHOG_ADMIN_PASSWORD
+#
+# This is the posthog package's second-provider pilot under the workspace
+# Compute Provider Standard: the same package that runs posthog-digitalocean,
+# selected onto Vultr by provider-compute alone.
+
+profile: posthog-vultr
+workdir: .colors
+
+provider-compute: vultr
+provider-dns: cloudflare
+provider-backend: r2
+
+# Preserve this guard in committed desired state. Destruction requires an
+# explicitly authorized one-run override; never edit this flag to bypass it.
+compute-prevent-destroy: true
+
+# --- PostHog Stack -----------------------------------------------------------
+
+# The owner account provisioned on every converge; its password is
+# COLORS_PAR_POSTHOG_ADMIN_PASSWORD.
+posthog-admin-email: claude@ululi.it
+
+# Distinct from posthog-digitalocean's hostname so a rebuild of either
+# deployment can never collide with the other.
+posthog-host: posthog-vultr.bigconfig.online
+# The application and plugin server images must come from one commit: they
+# share a Postgres schema, and a floating tag on either side means the node
+# process queries columns the application's migrations never created.
+posthog-image: posthog/posthog:82ea6681305bb00ad4ca920e3ba6e8fb39157424
+
+posthog-postgres-image: postgres:17-alpine
+posthog-clickhouse-image: clickhouse/clickhouse-server:26.6.2.158
+posthog-redis-image: redis:7.2-alpine
+posthog-plugin-server-image: posthog/posthog-node:82ea6681305bb00ad4ca920e3ba6e8fb39157424
+# :master resolved 2026-08-17.
+posthog-capture-image: ghcr.io/posthog/posthog/capture@sha256:8b07f51be1a8983c4d171b443a58c0deb3ab1e6e15202729cde85c3fa280b3e5
+posthog-temporal-image: temporalio/auto-setup:1.26.2
+posthog-kafka-image: redpandadata/redpanda:v25.1.9
+caddy-image: caddy:2.11.4
+
+posthog-postgres-data-dir: /var/lib/posthog/postgres
+posthog-clickhouse-data-dir: /var/lib/posthog/clickhouse
+posthog-redis-data-dir: /var/lib/posthog/redis
+posthog-kafka-data-dir: /var/lib/posthog/kafka
+posthog-backup-dir: /var/backups/posthog
+
+# --- Backups ----------------------------------------------------------------
+
+# Existing shared storage; this deployment owns only the posthog-vultr/ prefix
+# written by the backup script. Never delete the bucket or unrelated objects.
+posthog-backup-r2-bucket: posthog-backup
+posthog-backup-r2-endpoint: https://319271fed8bc6d2d9059362be1165f37.eu.r2.cloudflarestorage.com
+posthog-backup-r2-region: auto
+posthog-backup-oncalendar: "*-*-* 02:30:00"
+posthog-backup-retention-days: 7
+
+# --- Vultr ------------------------------------------------------------------
+
+# No vultr-name: per workspace standards/compute-name.md the instance and its
+# firewall group are named after the profile.
+vultr-region: ams
+# PostHog is a multi-tier product suite: Postgres, ClickHouse with embedded
+# Keeper, Redpanda, Redis, and three application processes. 8 GiB wedged the
+# DigitalOcean machine hard enough that sshd could not fork; upstream's own
+# hobby minimum is 16 GiB, and this is Vultr's smallest 16 GiB plan.
+vultr-plan: vc2-6c-16gb
+# Vultr operating systems are numeric ids; 2284 is Ubuntu 24.04 LTS x64.
+vultr-os-id: 2284
+
+# No vultr-ssh-keys: keygen mode per workspace standards/ssh-keypair.md. The
+# package generates and owns ~/.ssh/posthog-vultr and registers the account
+# key resource named after the profile. Setting vultr-ssh-keys here would
+# switch this deployment to opt-out mode.
+
+# SSH is key-only and used for convergence and recovery. HTTP(S) is public so
+# Cloudflare, event senders, and the acceptance checks can reach the host.
+vultr-ssh-sources:
+  - 0.0.0.0/0
+  - "::/0"
+vultr-http-sources:
+  - 0.0.0.0/0
+  - "::/0"
+
+# --- OpenTofu state ----------------------------------------------------------
+
+r2-bucket: tofu-state-319271fed8bc6d2d9059362be1165f37-eu
+r2-endpoint: https://319271fed8bc6d2d9059362be1165f37.eu.r2.cloudflarestorage.com
