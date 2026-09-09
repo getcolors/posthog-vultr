@@ -5,19 +5,19 @@
       "source": "getcolors/posthog",
       "sourceType": "github",
       "skillPath": "skills/package-posthog-blue/SKILL.md",
-      "computedHash": "56a5b45a02518f5678564fb000ba22531cdcac96554bbff77fa17fbb6dd8a718"
+      "computedHash": "bcbd06e7e62d22ad25bb5d1646bbf8315100bd8f31de3718151b71edfaacc041"
     },
     "package-posthog-green": {
       "source": "getcolors/posthog",
       "sourceType": "github",
       "skillPath": "skills/package-posthog-green/SKILL.md",
-      "computedHash": "53c1c5346d5d8543f430b1a749357cf6a8d7c2f787cd20e9075ab636cb70fb33"
+      "computedHash": "68f72586159cf8fa0ed11a74cf1b9a7382a328302b6842e87661abfaa8021270"
     },
     "package-posthog-red": {
       "source": "getcolors/posthog",
       "sourceType": "github",
       "skillPath": "skills/package-posthog-red/SKILL.md",
-      "computedHash": "e603ec58a6debdf76e89b8996aca4e42d83371ae1ff2801ef679687706a51867"
+      "computedHash": "63919c5fb25c265d2d9dc3a664c272232a02fd6d23bfae218eaa4af0dc7b478f"
     }
   }
 }

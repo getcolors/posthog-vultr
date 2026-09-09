@@ -1,6 +1,6 @@
 # Shared compute rollout
 
-Installed package: `getcolors/posthog` at published revision `1f23d7f3fc9a350708c9e8d565c936d534b8dad9`.
+Installed package: `getcolors/posthog` at published revision `53544325bad1e85aded5b5d123b0f1d8f534b8cb`.
 The installed skill directories and root launchers were copied from a verified
 Skills CLI installation of that revision. The existing skills-lock.json entries were updated from that installation.
 
