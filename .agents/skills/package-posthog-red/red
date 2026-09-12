@@ -36,8 +36,12 @@ import { homedir } from "node:os";
 // directory, which would halt Bun's upward resolution of `package-posthog-red`
 // and break the development symlink at red/red.
 const PINS = {
-  "package-posthog-red": "github:getcolors/posthog#4eb24f94edc397b6c2424aea7d918f956599d8cc",
+  "package-posthog-red": "github:getcolors/posthog#a255936be774503fc70e681d52afcb72a4e4801e",
   "package-once-red": "github:getcolors/once#38e3cd66674a32fb96605e1b17ae6791086ad5c1",
+  // The Red SDK is a peer of colors-compute-red, not a dependency: a cold
+  // cache installs nothing for a peer, so the consumer pins it explicitly, at
+  // the commit red/package.json pins. scripts/launcher.sh checks they agree.
+  "red": "github:getcolors/red#db9bfe61282e2093f4098bf5a6ee0cd10added6e",
 };
 
 // PINS is the only source of versions, as green's inline SHA and blue's PEP
